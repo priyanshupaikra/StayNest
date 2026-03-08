@@ -1,4 +1,4 @@
-# 🏠 StayNest — NestScale Global Accommodation Ecosystem
+# 🏠 StayNest — Global Accommodation Ecosystem
 
 > A scalable, secure, and high-performance online accommodation marketplace — similar to Airbnb — built with Django, React, and PostgreSQL.
 
