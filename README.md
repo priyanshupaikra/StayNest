@@ -70,16 +70,16 @@ The StayNest platform will:
 
 The scope of this project includes:
 
-| Area | Details |
-|------|---------|
-| **Full-Stack Development** | Complete marketplace application |
-| **Authentication** | Role-based authentication using JWT |
-| **Booking Logic** | Real-time booking with date validation and conflict prevention |
-| **Search & Filter** | Advanced filtering and search system |
-| **Media Storage** | Integration of cloud-based media storage |
-| **Transactions** | Secure transaction simulation |
-| **Database Design** | Scalable PostgreSQL with relational modeling |
-| **Deployment** | Production-ready architecture |
+| Area                       | Details                                                        |
+| -------------------------- | -------------------------------------------------------------- |
+| **Full-Stack Development** | Complete marketplace application                               |
+| **Authentication**         | Role-based authentication using JWT                            |
+| **Booking Logic**          | Real-time booking with date validation and conflict prevention |
+| **Search & Filter**        | Advanced filtering and search system                           |
+| **Media Storage**          | Integration of cloud-based media storage                       |
+| **Transactions**           | Secure transaction simulation                                  |
+| **Database Design**        | Scalable PostgreSQL with relational modeling                   |
+| **Deployment**             | Production-ready architecture                                  |
 
 > This project aims to simulate a **real-world marketplace system** used in the sharing economy domain.
 
@@ -88,34 +88,40 @@ The scope of this project includes:
 ## 🛠️ Technology Stack
 
 ### Frontend
-| Technology | Purpose |
-|------------|---------|
-| **React.js** | UI framework |
-| **Axios** | API communication |
+
+| Technology                     | Purpose              |
+| ------------------------------ | -------------------- |
+| **React.js**                   | UI framework         |
+| **Axios**                      | API communication    |
 | **Tailwind CSS / Material UI** | Styling & components |
 
 ### Backend
-| Technology | Purpose |
-|------------|---------|
-| **Django** | Web framework |
+
+| Technology                      | Purpose                 |
+| ------------------------------- | ----------------------- |
+| **Django**                      | Web framework           |
 | **Django REST Framework (DRF)** | RESTful API development |
 
 ### Authentication
-| Technology | Purpose |
-|------------|---------|
-| **JWT (SimpleJWT)** | Token-based authentication |
+
+| Technology          | Purpose                               |
+| ------------------- | ------------------------------------- |
+| **JWT (SimpleJWT)** | Token-based authentication            |
+| **Firebase**        | User authentication (OAuth & Sign-in) |
 
 ### Database
-| Technology | Purpose |
-|------------|---------|
+
+| Technology     | Purpose             |
+| -------------- | ------------------- |
 | **PostgreSQL** | Relational database |
 
 ### Additional Services
-| Technology | Purpose |
-|------------|---------|
-| **Cloudinary / AWS S3** | Image storage |
-| **Stripe** | Payment integration (optional) |
-| **Mapbox / Google Maps** | Interactive maps |
+
+| Technology               | Purpose                        |
+| ------------------------ | ------------------------------ |
+| **Cloudinary / AWS S3**  | Image storage                  |
+| **Stripe**               | Payment integration (optional) |
+| **Mapbox / Google Maps** | Interactive maps               |
 
 ---
 
@@ -146,6 +152,7 @@ The system follows a **three-tier architecture**:
 ```
 
 This architecture ensures:
+
 - ✅ **Scalability**
 - ✅ **Data Integrity**
 - ✅ **Security**
@@ -184,12 +191,12 @@ This project demonstrates:
 
 It aligns with modern industry standards in:
 
-| Domain | Application |
-|--------|-------------|
-| **E-commerce Platforms** | Online marketplaces |
-| **SaaS Applications** | Cloud-based services |
-| **Marketplace Systems** | Multi-vendor platforms |
-| **Sharing Economy** | Peer-to-peer rental systems |
+| Domain                   | Application                 |
+| ------------------------ | --------------------------- |
+| **E-commerce Platforms** | Online marketplaces         |
+| **SaaS Applications**    | Cloud-based services        |
+| **Marketplace Systems**  | Multi-vendor platforms      |
+| **Sharing Economy**      | Peer-to-peer rental systems |
 
 ---
 
@@ -217,12 +224,14 @@ Upon completion, the system will:
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/priyanshupaikra/NestScale-Global-accommodation-ecosystem.git
    cd NestScale-Global-accommodation-ecosystem
    ```
 
 2. **Backend Setup**
+
    ```bash
    cd backend
    python -m venv venv
@@ -233,6 +242,7 @@ Upon completion, the system will:
    ```
 
 3. **Frontend Setup**
+
    ```bash
    cd frontend
    npm install
@@ -242,12 +252,29 @@ Upon completion, the system will:
 4. **Environment Variables**
 
    Create a `.env` file in the backend directory:
+
    ```env
    SECRET_KEY=your-secret-key
    DEBUG=True
    DATABASE_URL=postgresql://user:password@localhost:5432/staynest
    CLOUDINARY_URL=your-cloudinary-url
    STRIPE_API_KEY=your-stripe-key
+   ```
+
+5. **Firebase Setup**
+
+   Initialize Firebase in your frontend by configuring `firebase1.js` with your specific Firebase project credentials:
+
+   ```javascript
+   const firebaseConfig = {
+     apiKey: "YOUR_API_KEY",
+     authDomain: "your-project-id.firebaseapp.com",
+     projectId: "your-project-id",
+     storageBucket: "your-project-id.firebasestorage.app",
+     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+     appId: "YOUR_APP_ID",
+     measurementId: "YOUR_MEASUREMENT_ID",
+   };
    ```
 
 ---
