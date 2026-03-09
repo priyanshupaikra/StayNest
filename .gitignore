@@ -1,4 +1,39 @@
+# Custom local files to ignore
 cloudinary.py
-.env
 firebase1.js
 firebase2.html
+
+# Environment variables
+.env
+backend/.env
+frontend/.env
+
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+.env/
+
+# Node / React (Frontend)
+node_modules/
+build/
+dist/
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
