@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const properties = [
   {
@@ -46,6 +47,8 @@ const categories = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -63,7 +66,7 @@ const Home = () => {
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 text-white">
               <h2 className="text-4xl md:text-6xl font-black mb-4 drop-shadow-lg">Find your nest away from home</h2>
               <p className="text-lg md:text-xl mb-8 max-w-2xl opacity-90 drop-shadow">Handpicked luxury stays for the discerning traveler.</p>
-              <button className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all transform hover:scale-105">
+              <button onClick={() => navigate('/search')} className="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all transform hover:scale-105">
                 Explore Experiences
               </button>
             </div>
@@ -89,7 +92,7 @@ const Home = () => {
         <section className="px-4 md:px-10 py-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {properties.map((prop) => (
-              <div key={prop.id} className="group cursor-pointer">
+              <div key={prop.id} onClick={() => navigate(`/property/${prop.id}`)} className="group cursor-pointer">
                 <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
                   <img src={prop.img} alt={prop.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
                   <button className="absolute top-3 right-3 text-white/90 hover:text-red-500 transition-colors">
@@ -113,7 +116,7 @@ const Home = () => {
           
           <div className="flex flex-col items-center gap-4 mt-16">
             <p className="text-slate-600 dark:text-slate-400">Continue exploring amazing nests</p>
-            <button className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold py-3 px-10 rounded-xl hover:scale-105 transition-transform">
+            <button onClick={() => navigate('/search')} className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold py-3 px-10 rounded-xl hover:scale-105 transition-transform">
               Show more
             </button>
           </div>

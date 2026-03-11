@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-4 md:px-10 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -12,7 +13,7 @@ const Navbar = () => {
         </Link>
         
         {/* Search Bar */}
-        <div className="hidden lg:flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-2 px-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+        <div onClick={() => navigate('/search')} className="hidden lg:flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-2 px-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
           <div className="px-4 border-r border-slate-200 dark:border-slate-700">
             <p className="text-xs font-bold uppercase text-slate-500">Location</p>
             <p className="text-sm text-slate-900 dark:text-slate-100">Where to?</p>
@@ -34,7 +35,7 @@ const Navbar = () => {
 
         {/* Mobile Search Icon */}
         <div className="lg:hidden flex-1 max-w-xs">
-          <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 shadow-sm">
+          <div onClick={() => navigate('/search')} className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 shadow-sm cursor-pointer">
             <span className="material-symbols-outlined text-primary">search</span>
             <span className="text-sm text-slate-500">Search destinations</span>
           </div>
