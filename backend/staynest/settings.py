@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from pymongo import MongoClient
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -89,11 +91,23 @@ WSGI_APPLICATION = "staynest.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/db.sqlite3"),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
+
+# MongoDB configuration
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/staynest")
+try:
+    # Initialize the MongoDB client. This will allow importing mongo_client and mongo_db across apps.
+    mongo_client = MongoClient(MONGODB_URI)
+    mongo_db = mongo_client.get_database() # or get_database('staynest') if not specified in URI
+except Exception as e:
+    print(f"Failed to initialize MongoDB client: {e}")
+    mongo_client = None
+    mongo_db = None
 
 
 # Password validation

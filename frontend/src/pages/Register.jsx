@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -9,15 +13,45 @@ const Register = () => {
     password: '',
     userType: 'guest'
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const value = e.target.value;
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    // Submit registration action setup later
+    setError('');
+    setLoading(true);
+
+    try {
+      // 1. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+
+      // 2. Save additional user details in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        userType: formData.userType,
+        createdAt: new Date().toISOString()
+      });
+
+      // 3. Redirect to login
+      navigate('/login');
+    } catch (err) {
+      console.error("Error signing up:", err);
+      // Simplify Firebase error messages
+      let message = err.message;
+      if (err.code === 'auth/email-already-in-use') message = "This email is already registered.";
+      if (err.code === 'auth/weak-password') message = "Password should be at least 6 characters.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -139,12 +173,19 @@ const Register = () => {
               </div>
           </fieldset>
 
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-4">
+              {error}
+            </div>
+          )}
+
           <div className="pt-2">
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-md"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Register
+              {loading ? 'Creating Account...' : 'Register'}
             </button>
           </div>
         </form>
