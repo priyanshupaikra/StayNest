@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
+  const [activities, setActivities] = useState([]); // Empty currently
+  const metrics = { earnings: 0, bookings: 0, rating: "0.00" };
   return (
     <div className="min-h-screen flex flex-col bg-background-light dark:bg-slate-900">
       <Navbar />
@@ -53,9 +55,9 @@ const Dashboard = () => {
                 <span className="font-medium text-sm">Monthly Earnings</span>
                 <span className="material-symbols-outlined">payments</span>
               </div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">$4,520</p>
-              <p className="text-sm text-green-500 mt-2 font-medium flex items-center gap-1">
-                <span className="material-symbols-outlined text-[10px]">arrow_upward</span> 12% from last month
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">${metrics.earnings}</p>
+              <p className="text-sm text-slate-500 mt-2 font-medium flex items-center gap-1">
+                No earnings yet
               </p>
             </div>
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
@@ -63,16 +65,16 @@ const Dashboard = () => {
                 <span className="font-medium text-sm">Upcoming Bookings</span>
                 <span className="material-symbols-outlined">event</span>
               </div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">8</p>
-              <p className="text-sm text-slate-500 mt-2">Next check-in: Tomorrow</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{metrics.bookings}</p>
+              <p className="text-sm text-slate-500 mt-2">No upcoming guests</p>
             </div>
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
               <div className="flex items-center justify-between mb-4 text-slate-500">
                 <span className="font-medium text-sm">Overall Rating</span>
                 <span className="material-symbols-outlined">star</span>
               </div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">4.92</p>
-              <p className="text-sm text-slate-500 mt-2">Based on 145 reviews</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{metrics.rating}</p>
+              <p className="text-sm text-slate-500 mt-2">Based on 0 reviews</p>
             </div>
           </div>
 
@@ -80,36 +82,17 @@ const Dashboard = () => {
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">Recent Activity</h2>
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
             <div className="divide-y divide-slate-100 dark:divide-slate-700 border-b border-slate-100 dark:border-slate-700">
-              <div className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
-                 <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-sm">check</span>
-                 </div>
-                 <div className="flex-1">
-                   <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">Booking confirmed</p>
-                   <p className="text-xs text-slate-500">Mark booked Azure Bay Retreat for Oct 12 - Oct 15</p>
-                 </div>
-                 <p className="text-xs text-slate-400">2h ago</p>
-              </div>
-              <div className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
-                 <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-sm">chat</span>
-                 </div>
-                 <div className="flex-1">
-                   <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">New message from Sarah</p>
-                   <p className="text-xs text-slate-500">"Is the pool heated during November?"</p>
-                 </div>
-                 <p className="text-xs text-slate-400">5h ago</p>
-              </div>
-              <div className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
-                 <div className="w-10 h-10 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-sm">star</span>
-                 </div>
-                 <div className="flex-1">
-                   <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">New 5-star review</p>
-                   <p className="text-xs text-slate-500">David left a review for The Glass Cabin</p>
-                 </div>
-                 <p className="text-xs text-slate-400">1d ago</p>
-              </div>
+              
+              {activities.length === 0 ? (
+                <div className="p-8 text-center text-slate-500">
+                   <p>No recent activity. All caught up!</p>
+                </div>
+              ) : activities.map((act, i) => (
+                <div key={i} className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
+                  {/* Dynamic activity rows rendered here */}
+                </div>
+              ))}
+
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/80 p-3 text-center">
                <button className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">View all activity</button>

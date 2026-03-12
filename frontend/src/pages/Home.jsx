@@ -1,42 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-
-const properties = [
-  {
-    id: 1,
-    title: "Azure Bay Retreat",
-    location: "Malibu, California",
-    price: "$850",
-    rating: "4.95",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBy74GjufROuwPPKFk8IaQJA7MZMiOLfQRzsyWdH9rstVEL87Rnz58_iMNG-cSxTDy3V8XXGd8eka9bfvjXgpl2MBOKf9h39uruK1iIQKs0NQZBZc0lmcy7_3Vhm_U5X6E-2DckzwaHG8DrgEx6OPKbLrH2KqpEZ2aDS5HvqaRON30kpwlPb-6Mct4qOSJrd1kafT5oZPe2ssI0aq3SHigQDtdgVGMbZqSqeFDQjPupg_GeZHElWejBQ9-uqCIaG0Ji6jtSEJPP5jxA"
-  },
-  {
-    id: 2,
-    title: "The Glass Cabin",
-    location: "Aspen, Colorado",
-    price: "$420",
-    rating: "4.88",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhLz5FQv2gMWOrOG-VQHnSgf19EB0KBY6XglxSDLFHEAkt9SHnoDlfMv4mFXdB5rgKy1ElksR6EwJMU-bWbLAaCx8QAB5sozpz8bUVhNbytCj5q-Jzu1vit1INH0RXuvQzUYODD7TuGCLvWViagb1SNa_-w-6R04kh0oyyqHnUvPdurtJJmVZHrSeaXr-cP21Mne3mGlEQ1pLSkN8ThLxLyAnknYXquqiF0io3g8UAPP2476b6uX5Ot88HwOdQ9yTZSWctil9cezjb"
-  },
-  {
-    id: 3,
-    title: "Skyline Penthouse",
-    location: "New York City, NY",
-    price: "$1,200",
-    rating: "4.92",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCl2MqaQhNDPIO1oeYOV5hMelFjRm4SWmykmOfLhWdT8JKROyZ2KGimERtVZ1taDjsM7UtihbRbPehs2JvJR-KJns_9lR-_WXwLAXYTFgKtjcP_gs9Y-mSfmp4_2jjbIHyumL3jZxYojN0SAMA8ZxpK8L6I5b6_WllTNITe1A42ntXH6PY_SNNxudnm-r_JgeCMn9M0poHiR-EIx5ar5Utyg7A91QQX0bXRyITqLYulhrrm_x9CL4MI9G9mlD59macL9dCei89-ek0o"
-  },
-  {
-    id: 4,
-    title: "Villa del Sol",
-    location: "Santorini, Greece",
-    price: "$650",
-    rating: "5.0",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuClprEo8Pxg9TBHpdJVJ7q4mL6Pq1Khu0Jw53soxXw1fi2KIqiZB1GfQ0oFkhqVAu-2y5-3vcm4G__M6VQL9lQqYAGqd3mhOnY08n3Kx-VOj9RoGu94xyegnsSX2LoEyIqYZjGPXn1rLbi8uCfb2PrOIFWKEj5uYc4iIC6niDTQmvvJM6zdQqr0GOuaATU0CO3DIZF92YhNoMsDJoum5QogqsYXkYUPRAs0bbLluxezVQNhsUWUNDafuHPJ7_zNB1abX5UkdSlK7F_f"
-  }
-];
+import api from '../api';
 
 const categories = [
   { icon: "waves", label: "Beachfront", active: true },
@@ -48,6 +14,27 @@ const categories = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const [properties, setProperties] = useState([]); // Currently empty, waiting for backend integrations
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        // GET array of properties from your Django DB (PostgreSQL backend)
+        const response = await api.get('properties/'); 
+        setProperties(response.data);
+      } catch (err) {
+        console.error('Failed to fetch properties', err);
+        setError('Failed to load listings. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProperties();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -91,23 +78,39 @@ const Home = () => {
         {/* Property Grid */}
         <section className="px-4 md:px-10 py-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {properties.map((prop) => (
+            {loading ? (
+              <div className="col-span-full py-16 text-center text-primary flex justify-center items-center">
+                 <span className="material-symbols-outlined text-4xl animate-spin">refresh</span>
+              </div>
+            ) : error ? (
+              <div className="col-span-full py-16 text-center text-red-500">
+                <span className="material-symbols-outlined text-6xl mb-4 opacity-50">warning</span>
+                <p>{error}</p>
+              </div>
+            ) : properties.length === 0 ? (
+              <div className="col-span-full py-16 text-center text-slate-500 dark:text-slate-400">
+                <span className="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
+                <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-slate-100">No properties found</h3>
+                <p>There are currently no listings available in the database.</p>
+              </div>
+            ) : properties.map((prop) => (
               <div key={prop.id} onClick={() => navigate(`/property/${prop.id}`)} className="group cursor-pointer">
                 <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
-                  <img src={prop.img} alt={prop.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
-                  <button className="absolute top-3 right-3 text-white/90 hover:text-red-500 transition-colors">
+                  {/* Pulls Cloudinary image URL dynamically */}
+                  <img src={prop.image_url || prop.img || "https://placehold.co/600x400/eee/999?text=No+Image"} alt={prop.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
+                  <button className="absolute top-3 right-3 text-white/90 hover:text-red-500 transition-colors" onClick={(e) => e.stopPropagation()}>
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
                   </button>
                 </div>
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-slate-900 dark:text-slate-100">{prop.title}</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">{prop.location}</p>
-                    <p className="mt-2"><span className="font-bold">{prop.price}</span> <span className="text-slate-500 font-normal">night</span></p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{prop.location || prop.city}</p>
+                    <p className="mt-2"><span className="font-bold">${prop.price}</span> <span className="text-slate-500 font-normal">night</span></p>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                    <span className="text-sm font-medium">{prop.rating}</span>
+                    <span className="text-sm font-medium">{prop.rating || "New"}</span>
                   </div>
                 </div>
               </div>

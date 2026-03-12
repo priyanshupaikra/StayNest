@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+import api from '../api';
 
 const MyProperties = () => {
+  const [properties, setProperties] = useState([]); // Empty currently
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch properties belonging to the logged-in user
+    const fetchMyProperties = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('properties/my-listings/'); 
+        setProperties(response.data);
+      } catch (err) {
+        console.error('Failed to fetch user properties', err);
+        setError('Could not load your properties.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchMyProperties();
+  }, []);
   return (
     <div className="min-h-screen flex flex-col bg-background-light dark:bg-slate-900">
       <Navbar />
@@ -49,53 +71,58 @@ const MyProperties = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="p-4">
-                      <div className="flex items-center gap-4">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy74GjufROuwPPKFk8IaQJA7MZMiOLfQRzsyWdH9rstVEL87Rnz58_iMNG-cSxTDy3V8XXGd8eka9bfvjXgpl2MBOKf9h39uruK1iIQKs0NQZBZc0lmcy7_3Vhm_U5X6E-2DckzwaHG8DrgEx6OPKbLrH2KqpEZ2aDS5HvqaRON30kpwlPb-6Mct4qOSJrd1kafT5oZPe2ssI0aq3SHigQDtdgVGMbZqSqeFDQjPupg_GeZHElWejBQ9-uqCIaG0Ji6jtSEJPP5jxA" alt="Azure Bay" className="w-16 h-12 object-cover rounded-md shrink-0" />
-                        <div>
-                          <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">Azure Bay Retreat</p>
-                          <p className="text-xs text-slate-500">Villa · 4 beds</p>
+                  {loading ? (
+                    <tr>
+                       <td colSpan="5" className="p-10 text-center text-primary">
+                          <span className="material-symbols-outlined text-4xl animate-spin">refresh</span>
+                       </td>
+                    </tr>
+                  ) : error ? (
+                    <tr>
+                       <td colSpan="5" className="p-10 text-center text-red-500">
+                          <p>{error}</p>
+                       </td>
+                    </tr>
+                  ) : properties.length === 0 ? (
+                    <tr>
+                       <td colSpan="5" className="p-10 text-center text-slate-500">
+                          <span className="material-symbols-outlined text-4xl mb-2 opacity-50">holiday_village</span>
+                          <p className="font-semibold text-slate-900 dark:text-slate-100">No properties listed</p>
+                          <p className="text-sm">You haven't added any properties yet. Click "Create new listing" to get started.</p>
+                       </td>
+                    </tr>
+                  ) : properties.map(prop => (
+                    <tr key={prop.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <td className="p-4">
+                        <div className="flex items-center gap-4">
+                          <img src={prop.image_url || prop.img || "https://placehold.co/100"} alt={prop.title} className="w-16 h-12 object-cover rounded-md shrink-0" />
+                          <div>
+                            <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">{prop.title}</p>
+                            <p className="text-xs text-slate-500">{prop.property_type || "Property"} · {prop.bedrooms || 0} beds</p>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4 hidden md:table-cell text-sm text-slate-600 dark:text-slate-400">Malibu, CA</td>
-                    <td className="p-4 text-sm font-semibold text-slate-900 dark:text-slate-100">$850/n</td>
-                    <td className="p-4">
-                      <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Active</span>
-                    </td>
-                    <td className="p-4 text-right">
-                       <button className="text-slate-400 hover:text-primary transition-colors p-1"><span className="material-symbols-outlined text-sm">edit</span></button>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="p-4">
-                      <div className="flex items-center gap-4">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhLz5FQv2gMWOrOG-VQHnSgf19EB0KBY6XglxSDLFHEAkt9SHnoDlfMv4mFXdB5rgKy1ElksR6EwJMU-bWbLAaCx8QAB5sozpz8bUVhNbytCj5q-Jzu1vit1INH0RXuvQzUYODD7TuGCLvWViagb1SNa_-w-6R04kh0oyyqHnUvPdurtJJmVZHrSeaXr-cP21Mne3mGlEQ1pLSkN8ThLxLyAnknYXquqiF0io3g8UAPP2476b6uX5Ot88HwOdQ9yTZSWctil9cezjb" alt="Glass Cabin" className="w-16 h-12 object-cover rounded-md shrink-0" />
-                        <div>
-                          <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">The Glass Cabin</p>
-                          <p className="text-xs text-slate-500">Cabin · 2 beds</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4 hidden md:table-cell text-sm text-slate-600 dark:text-slate-400">Aspen, CO</td>
-                    <td className="p-4 text-sm font-semibold text-slate-900 dark:text-slate-100">$420/n</td>
-                    <td className="p-4">
-                      <span className="px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300">Draft</span>
-                    </td>
-                    <td className="p-4 text-right">
-                       <button className="text-slate-400 hover:text-primary transition-colors p-1"><span className="material-symbols-outlined text-sm">edit</span></button>
-                    </td>
-                  </tr>
+                      </td>
+                      <td className="p-4 hidden md:table-cell text-sm text-slate-600 dark:text-slate-400">{prop.city || prop.location}</td>
+                      <td className="p-4 text-sm font-semibold text-slate-900 dark:text-slate-100">${prop.price}/n</td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${prop.is_active !== false ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'}`}>
+                          {prop.is_active !== false ? "Active" : "Draft"}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                         <button className="text-slate-400 hover:text-primary transition-colors p-1"><span className="material-symbols-outlined text-sm">edit</span></button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
             
             <div className="p-4 border-t border-slate-200 dark:border-slate-700 text-sm text-slate-500 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
-              <p>Showing 2 of 2 properties</p>
+              <p>Showing {properties.length} properties</p>
               <div className="flex gap-2">
-                <button className="px-3 py-1 border border-slate-300 dark:border-slate-600 rounded cursor-not-allowed opacity-50">Prev</button>
-                <button className="px-3 py-1 border border-slate-300 dark:border-slate-600 rounded cursor-not-allowed opacity-50">Next</button>
+                <button className={`px-3 py-1 border border-slate-300 dark:border-slate-600 rounded ${properties.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}>Prev</button>
+                <button className={`px-3 py-1 border border-slate-300 dark:border-slate-600 rounded ${properties.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}>Next</button>
               </div>
             </div>
           </div>

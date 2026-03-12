@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 
-const properties = [
-  { id: 1, title: 'Azure Bay Retreat', price: '$850', rating: '4.95', details: 'Entire villa · 4 beds · Free parking', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBy74GjufROuwPPKFk8IaQJA7MZMiOLfQRzsyWdH9rstVEL87Rnz58_iMNG-cSxTDy3V8XXGd8eka9bfvjXgpl2MBOKf9h39uruK1iIQKs0NQZBZc0lmcy7_3Vhm_U5X6E-2DckzwaHG8DrgEx6OPKbLrH2KqpEZ2aDS5HvqaRON30kpwlPb-6Mct4qOSJrd1kafT5oZPe2ssI0aq3SHigQDtdgVGMbZqSqeFDQjPupg_GeZHElWejBQ9-uqCIaG0Ji6jtSEJPP5jxA' },
-  { id: 2, title: 'The Glass Cabin', price: '$420', rating: '4.88', details: 'Entire cabin · 2 beds · Wifi', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAhLz5FQv2gMWOrOG-VQHnSgf19EB0KBY6XglxSDLFHEAkt9SHnoDlfMv4mFXdB5rgKy1ElksR6EwJMU-bWbLAaCx8QAB5sozpz8bUVhNbytCj5q-Jzu1vit1INH0RXuvQzUYODD7TuGCLvWViagb1SNa_-w-6R04kh0oyyqHnUvPdurtJJmVZHrSeaXr-cP21Mne3mGlEQ1pLSkN8ThLxLyAnknYXquqiF0io3g8UAPP2476b6uX5Ot88HwOdQ9yTZSWctil9cezjb' },
-];
-
 const SearchAndFilter = () => {
+  const [properties, setProperties] = useState([]); // Empty currently, mapped dynamically when user inputs data
+
   return (
     <div className="min-h-screen flex flex-col h-screen overflow-hidden">
       <Navbar />
@@ -38,7 +35,13 @@ const SearchAndFilter = () => {
           </p>
 
           <div className="space-y-6">
-            {properties.map((prop) => (
+            {properties.length === 0 ? (
+              <div className="py-16 text-center text-slate-500 dark:text-slate-400">
+                <span className="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
+                <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-slate-100">No properties found</h3>
+                <p>Try adjusting your search filters or map area.</p>
+              </div>
+            ) : properties.map((prop) => (
               <div key={prop.id} className="flex flex-col sm:flex-row gap-4 border-b border-slate-200 dark:border-slate-700 pb-6 group cursor-pointer">
                 <Link to="/property/1" className="w-full sm:w-72 h-48 sm:h-auto rounded-xl overflow-hidden shrink-0 relative block">
                   <img src={prop.img} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
