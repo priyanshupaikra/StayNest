@@ -65,7 +65,7 @@ const SearchAndFilter = () => {
             ) : properties.map((prop) => (
               <div key={prop.id} className="flex flex-col sm:flex-row gap-4 border-b border-slate-200 dark:border-slate-700 pb-6 group cursor-pointer">
                 <Link to={`/property/${prop.id}`} className="w-full sm:w-72 h-48 sm:h-auto rounded-xl overflow-hidden shrink-0 relative block">
-                  <img src={prop.image_url || prop.img || "https://placehold.co/600x400/eee/999?text=No+Image"} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={prop.image || prop.img || "https://placehold.co/600x400/eee/999?text=No+Image"} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <button className="absolute top-3 right-3 text-white/90 hover:text-red-500 transition-colors z-10" onClick={(e) => e.preventDefault()}>
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
                   </button>

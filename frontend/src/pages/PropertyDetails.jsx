@@ -119,7 +119,7 @@ const PropertyDetails = () => {
         {/* Image Gallery */}
         <div className="grid grid-cols-4 gap-2 h-[400px] md:h-[500px] mb-10 rounded-2xl overflow-hidden">
           <div className="col-span-4 md:col-span-2 row-span-2">
-            <img src={property.image_url || property.img || "https://placehold.co/800x600/eee/999?text=No+Image"} className="w-full h-full object-cover hover:opacity-95 transition-opacity cursor-pointer" alt={property.title} />
+            <img src={property.image || property.img || "https://placehold.co/800x600/eee/999?text=No+Image"} className="w-full h-full object-cover hover:opacity-95 transition-opacity cursor-pointer" alt={property.title} />
           </div>
           <div className="hidden md:block col-span-1 row-span-1">
             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrDKAdtWgI5vyV3foYLcSSDU6qnekeUyKCdJFUKpLXmEgvv1Tmxd83jGmJ1_Pdn0xGhMlXo7BctgNQ5DvKyQUj5vddtjGEg83xFBbUgfrOfVPDu6SLCDbFXwfGtqO7rBZZhqhfcWLeN4spreFvVkHEBt3JZcBqXL2iQTFd6giudJNucSmdKXJg6F4GpyGLrtw7o2AbDGAX6-l37ym-pL6As1FothulGKQ4YESyDeyPm7-I0L-uUYUg8I2PBJpWKKt7UA5fCrfMbNu-" className="w-full h-full object-cover hover:opacity-95 transition-opacity cursor-pointer" alt="Gallery 1" />

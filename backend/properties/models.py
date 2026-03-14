@@ -24,7 +24,7 @@ class Property(models.Model):
     max_guests = models.IntegerField(default=1)
     
     # Media: Default image (for simplicity, we can also have a separate PropertyImage model)
-    image_url = models.URLField(max_length=500, blank=True, null=True)
+    image = models.ImageField(upload_to='property_images/', blank=True, null=True)
     
     # Status
     is_active = models.BooleanField(default=True)

@@ -97,7 +97,7 @@ const Home = () => {
               <div key={prop.id} onClick={() => navigate(`/property/${prop.id}`)} className="group cursor-pointer">
                 <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
                   {/* Pulls Cloudinary image URL dynamically */}
-                  <img src={prop.image_url || prop.img || "https://placehold.co/600x400/eee/999?text=No+Image"} alt={prop.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
+                  <img src={prop.image || prop.img || "https://placehold.co/600x400/eee/999?text=No+Image"} alt={prop.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
                   <button className="absolute top-3 right-3 text-white/90 hover:text-red-500 transition-colors" onClick={(e) => e.stopPropagation()}>
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
                   </button>
