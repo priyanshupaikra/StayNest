@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const Wishlist = () => {
-  const [wishlists, setWishlists] = useState([]); // Empty currently
+  const [wishlists] = useState([]); // Empty currently
 
   return (
     <div className="min-h-screen flex flex-col">
