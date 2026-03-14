@@ -1,9 +1,59 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import api from '../api';
 
 const AddProperty = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
+
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    property_type: 'house',
+    location: '', // Will be split into city/country in submission
+    max_guests: 2,
+    bedrooms: 1,
+    bathrooms: 1,
+    image_url: '',
+    price: 150,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePublish = async () => {
+    try {
+      const parts = formData.location.split(',');
+      const city = parts[0] ? parts[0].trim() : formData.location;
+      const country = parts[1] ? parts[1].trim() : 'Unknown';
+
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        property_type: formData.property_type,
+        city: city,
+        country: country,
+        max_guests: parseInt(formData.max_guests),
+        bedrooms: parseInt(formData.bedrooms),
+        bathrooms: parseFloat(formData.bathrooms),
+        image_url: formData.image_url,
+        price: parseFloat(formData.price),
+      };
+
+      const response = await api.post('properties/', payload);
+      if (response.status === 201) {
+        alert("Property published successfully!");
+        navigate('/my-properties');
+      }
+    } catch (err) {
+      console.error('Failed to publish property:', err);
+      alert('Failed to publish property. Please check your inputs and try again.');
+    }
+  };
 
   const nextStep = () => setStep(step < 3 ? step + 1 : step);
   const prevStep = () => setStep(step > 1 ? step - 1 : step);
@@ -38,19 +88,19 @@ const AddProperty = () => {
               
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Title</label>
-                <input type="text" placeholder="Cozy Cabin in the Woods" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Cozy Cabin in the Woods" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
                 <p className="text-xs text-slate-500 mt-1">Catch guests' attention with a listing title that highlights what makes your place special.</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
-                <textarea rows="4" placeholder="Describe the decor, light, neighborhood..." className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+                <textarea rows="4" name="description" value={formData.description} onChange={handleChange} placeholder="Describe the decor, light, neighborhood..." className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Property Type</label>
-                  <select className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white">
+                  <select name="property_type" value={formData.property_type} onChange={handleChange} className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white">
                     <option value="house">House</option>
                     <option value="apartment">Apartment</option>
                     <option value="cabin">Cabin</option>
@@ -59,22 +109,22 @@ const AddProperty = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Location</label>
-                  <input type="text" placeholder="City, Country" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+                  <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="City, Country" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
                  <div>
                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Guests</label>
-                   <input type="number" min="1" defaultValue="2" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
+                   <input type="number" name="max_guests" min="1" value={formData.max_guests} onChange={handleChange} className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
                  </div>
                  <div>
                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Bedrooms</label>
-                   <input type="number" min="1" defaultValue="1" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
+                   <input type="number" name="bedrooms" min="1" value={formData.bedrooms} onChange={handleChange} className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
                  </div>
                  <div>
                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Bathrooms</label>
-                   <input type="number" min="0.5" step="0.5" defaultValue="1" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
+                   <input type="number" name="bathrooms" min="0.5" step="0.5" value={formData.bathrooms} onChange={handleChange} className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-primary dark:text-white" />
                  </div>
               </div>
             </div>
@@ -85,13 +135,8 @@ const AddProperty = () => {
                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-4">Make it stand out</h2>
                
                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Upload Photos</label>
-                  <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-10 text-center hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer">
-                     <span className="material-symbols-outlined text-4xl text-slate-400 mb-2">cloud_upload</span>
-                     <p className="font-semibold text-slate-700 dark:text-slate-200">Drag and drop your photos here</p>
-                     <p className="text-sm text-slate-500 mt-1">or click to browse from your computer</p>
-                     <p className="text-xs text-slate-400 mt-4">JPG, PNG, WebP up to 5MB</p>
-                  </div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Main Image URL</label>
+                  <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://example.com/image.jpg" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
                </div>
 
                <div className="border-t border-slate-200 dark:border-slate-700 pt-6 mt-6">
@@ -126,7 +171,7 @@ const AddProperty = () => {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nightly Price</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
-                  <input type="number" placeholder="150" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent pl-8 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white font-bold text-lg" />
+                  <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="150" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent pl-8 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white font-bold text-lg" />
                 </div>
                 <p className="text-xs text-slate-500 mt-2">Set a competitive price based on similar listings in your area.</p>
               </div>
@@ -171,6 +216,7 @@ const AddProperty = () => {
               </button>
             ) : (
               <button 
+                onClick={handlePublish}
                 className="bg-primary text-white border border-transparent px-8 py-2.5 rounded-xl font-bold hover:bg-primary/90 hover:scale-105 shadow-md transition-all"
               >
                 Publish Listing
