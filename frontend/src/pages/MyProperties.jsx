@@ -95,7 +95,7 @@ const MyProperties = () => {
                     <tr key={prop.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-4">
-                          <img src={prop.image_url || prop.img || "https://placehold.co/100"} alt={prop.title} className="w-16 h-12 object-cover rounded-md shrink-0" />
+                          <img src={prop.image || prop.img || "https://placehold.co/100"} alt={prop.title} className="w-16 h-12 object-cover rounded-md shrink-0" />
                           <div>
                             <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">{prop.title}</p>
                             <p className="text-xs text-slate-500">{prop.property_type || "Property"} · {prop.bedrooms || 0} beds</p>

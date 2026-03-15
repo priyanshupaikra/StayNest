@@ -7,3 +7,4 @@ django-cors-headers
 dj-database-url
 pymongo
 dnspython
+Pillow

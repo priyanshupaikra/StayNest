@@ -16,13 +16,17 @@ const AddProperty = () => {
     max_guests: 2,
     bedrooms: 1,
     bathrooms: 1,
-    image_url: '',
+    image: null,
     price: 150,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'image') {
+      setFormData(prev => ({ ...prev, image: e.target.files[0] }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePublish = async () => {
@@ -31,20 +35,27 @@ const AddProperty = () => {
       const city = parts[0] ? parts[0].trim() : formData.location;
       const country = parts[1] ? parts[1].trim() : 'Unknown';
 
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        property_type: formData.property_type,
-        city: city,
-        country: country,
-        max_guests: parseInt(formData.max_guests),
-        bedrooms: parseInt(formData.bedrooms),
-        bathrooms: parseFloat(formData.bathrooms),
-        image_url: formData.image_url,
-        price: parseFloat(formData.price),
-      };
+      const payload = new FormData();
+      payload.append('title', formData.title);
+      payload.append('description', formData.description);
+      payload.append('property_type', formData.property_type);
+      payload.append('city', city);
+      payload.append('country', country);
+      payload.append('max_guests', parseInt(formData.max_guests));
+      payload.append('bedrooms', parseInt(formData.bedrooms));
+      payload.append('bathrooms', parseFloat(formData.bathrooms));
+      payload.append('price', parseFloat(formData.price));
 
-      const response = await api.post('properties/', payload);
+      if (formData.image) {
+        payload.append('image', formData.image);
+      }
+
+      const response = await api.post('properties/', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
       if (response.status === 201) {
         alert("Property published successfully!");
         navigate('/my-properties');
@@ -135,8 +146,8 @@ const AddProperty = () => {
                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-4">Make it stand out</h2>
                
                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Main Image URL</label>
-                  <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://example.com/image.jpg" className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Upload Photo</label>
+                  <input type="file" name="image" accept="image/*" onChange={handleChange} className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-transparent px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
                </div>
 
                <div className="border-t border-slate-200 dark:border-slate-700 pt-6 mt-6">
